@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout :: head('Đăng ký')}"></head>
+
+<body>
+    <div th:replace="~{fragments/layout :: header('register')}"></div>
+
+    <main class="wrap">
+        <div class="auth panel">
+            <a class="logo" th:href="@{/trang-chu}">NOVA<b>PLAY</b></a>
+            <h2 style="margin-top:22px">Tạo tài khoản</h2>
+
+            <div class="alert-box err" th:if="${loiChung != null}" th:text="${loiChung}"></div>
+
+            <form th:action="@{/dang-ky}" method="post" novalidate
+                  onsubmit="const btn = this.querySelector('button[type=submit]'); if (btn.disabled) return false; btn.disabled = true; btn.textContent = 'Đang xử lý...';">
+                <label for="name">Tên hiển thị</label>
+                <input id="name" name="tenHienThi" th:value="${tenHienThi}" required maxlength="100">
+                <span class="field-error" th:if="${loiTenHienThi != null}" th:text="${loiTenHienThi}"></span>
+
+                <label for="email">Email</label>
+                <input id="email" name="email" type="email" th:value="${email}" required maxlength="100">
+                <span class="field-error" th:if="${loiEmail != null}" th:text="${loiEmail}"></span>
+
+                <label for="username">Tên đăng nhập</label>
+                <input id="username" name="tenDangNhap" th:value="${tenDangNhap}" required minlength="3" maxlength="50" autocomplete="username">
+                <span class="field-error" th:if="${loiTenDangNhap != null}" th:text="${loiTenDangNhap}"></span>
+
+                <label for="password">Mật khẩu</label>
+                <input id="password" name="matKhau" type="password" required minlength="6" autocomplete="off">
+                <span class="field-error" th:if="${loiMatKhau != null}" th:text="${loiMatKhau}"></span>
+
+                <label for="confirmPassword">Xác nhận mật khẩu</label>
+                <input id="confirmPassword" name="xacNhanMatKhau" type="password" required minlength="6" autocomplete="off">
+                <span class="field-error" th:if="${loiXacNhanMatKhau != null}" th:text="${loiXacNhanMatKhau}"></span>
+
+                <button type="submit" class="primary full">Đăng ký</button>
+            </form>
+
+            <a th:href="@{/dang-nhap}" style="display:inline-block; margin-top:16px;">Đã có tài khoản? Đăng nhập</a>
+        </div>
+    </main>
+
+    <div th:replace="~{fragments/layout :: footer}"></div>
+</body>
+
+</html>

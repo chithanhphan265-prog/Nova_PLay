@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout :: head('Trang chủ')}"></head>
+
+<body>
+    <div th:replace="~{fragments/layout :: header('home')}"></div>
+
+    <main class="wrap">
+        <section class="hero">
+            <div>
+                <span class="pill">KHÁM PHÁ THẾ GIỚI CỦA BẠN</span>
+                <h1>Một lần sở hữu.<br><span class="gradient">Vạn cuộc phiêu lưu.</span></h1>
+                <p class="muted">Tìm tựa game tiếp theo, xây dựng thư viện của riêng bạn và bắt đầu hành trình mới.</p>
+                <div class="row">
+                    <a class="btn primary" th:href="@{/cua-hang}">Khám phá cửa hàng →</a>
+                    <a class="btn" th:if="${currentUser != null and currentUser.laAdmin()}" th:href="@{/admin/tai-khoan}">Khu quản trị</a>
+                    <a class="btn" th:unless="${currentUser != null and currentUser.laAdmin()}" th:href="@{/thu-vien}">Thư viện của tôi</a>
+                </div>
+                <p class="tiny muted" style="margin-top:24px">✦ Sở hữu không thời hạn &nbsp; ✦ Đánh giá từ người chơi</p>
+            </div>
+            <div class="hero-art" th:if="${heroGame != null}">
+                <a th:href="@{/cua-hang/{id}(id=${heroGame.maTroChoi})}" style="width:100%;">
+                    <div class="art large" th:style="'--c:' + ${heroGame.mauBia}">
+                        <img th:if="${heroGame.hinhAnh != null and !heroGame.hinhAnh.isBlank()}"
+                             th:src="@{'/img/' + ${heroGame.hinhAnh}}" th:alt="${heroGame.tieuDe}">
+                        <strong th:text="${#strings.toUpperCase(heroGame.tieuDe)}">ASTRAL ODYSSEY</strong>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <div class="section">
+            <h2>Chọn thế giới bạn thích</h2>
+        </div>
+        <div class="row">
+            <a class="btn" th:each="tl : ${theLoais}"
+               th:href="@{/cua-hang(maTheLoai=${tl.maTheLoai})}"
+               th:text="${tl.tenTheLoai}">Thể loại</a>
+        </div>
+
+        <div class="row between">
+            <div class="section">
+                <h2>Game nổi bật</h2>
+            </div>
+            <a th:href="@{/cua-hang}">Tất cả game →</a>
+        </div>
+        <div class="grid">
+            <th:block th:each="g : ${gameNoiBat}">
+                <article th:replace="~{fragments/layout :: gameCard(${g})}"></article>
+            </th:block>
+        </div>
+
+        <div class="promo section">
+            <div class="panel">
+                <span class="pill">THƯ VIỆN CÁ NHÂN</span>
+                <h2 style="margin-top:18px">Game của bạn.<br>Thế giới của bạn.</h2>
+                <p class="muted">Tập hợp các game đã mua tại một nơi.</p>
+                <a th:if="${currentUser != null and currentUser.laAdmin()}" th:href="@{/admin/tai-khoan}">Mở khu quản trị →</a>
+                <a th:unless="${currentUser != null and currentUser.laAdmin()}" th:href="@{/thu-vien}">Mở thư viện →</a>
+            </div>
+            <div class="panel">
+                <span class="pill">CỘNG ĐỒNG NGƯỜI CHƠI</span>
+                <h2 style="margin-top:18px">Chơi. Cảm nhận.<br>Chia sẻ.</h2>
+                <p class="muted">Đánh giá từ những người đã sở hữu game.</p>
+                <a th:href="@{/cua-hang(sort='danhGia')}">Xem game được đánh giá cao →</a>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Khám phá thêm</h2>
+        </div>
+        <div class="grid">
+            <th:block th:each="g : ${gameKhamPha}">
+                <article th:replace="~{fragments/layout :: gameCard(${g})}"></article>
+            </th:block>
+        </div>
+    </main>
+
+    <div th:replace="~{fragments/layout :: footer}"></div>
+</body>
+
+</html>

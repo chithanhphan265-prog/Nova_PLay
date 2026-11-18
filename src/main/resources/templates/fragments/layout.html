@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head th:fragment="head(pageTitle)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${pageTitle != null ? pageTitle + ' — NOVA PLAY' : 'NOVA PLAY — Cửa hàng game'}">NOVA PLAY</title>
+    <style>
+        :root {
+            color-scheme: dark;
+            --bg: #060d18;
+            --panel: #101d30;
+            --line: #26364f;
+            --muted: #a3b4ce;
+            --accent: #80aaff;
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: #edf4ff;
+            font: 15px/1.6 'Segoe UI', system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        button, input, select, textarea { font: inherit; }
+        button, a, .btn { cursor: pointer; }
+        button, .btn {
+            display: inline-block;
+            background: #1a2b44;
+            color: #edf4ff;
+            border: 1px solid #334864;
+            border-radius: 9px;
+            padding: 10px 16px;
+            text-decoration: none;
+            text-align: center;
+        }
+        button:hover, .btn:hover { border-color: #8e9eff; }
+        button:disabled { opacity: .45; cursor: default; }
+        .primary {
+            background: linear-gradient(110deg, #147dff, #9663ee);
+            border: 0;
+            color: #fff;
+        }
+        .primary:hover { filter: brightness(1.08); }
+        .danger { color: #ffb5bf; }
+        .danger-btn { background: #411b2a; border-color: #7c304a; color: #ffd4db; }
+        a { color: #9dc7ff; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        .btn:hover, .logo:hover, .links a:hover { text-decoration: none; }
+        input, select, textarea {
+            background: #0a1424;
+            color: #edf4ff;
+            border: 1px solid #38506f;
+            border-radius: 8px;
+            padding: 11px;
+            width: 100%;
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #80aaff;
+        }
+        textarea { min-height: 100px; }
+        label { display: block; margin: 12px 0 5px; }
+        input[type=checkbox] { width: auto; }
+        h1, h2, h3, p { margin-top: 0; }
+        h1 { font-size: 46px; line-height: 1.12; letter-spacing: -1px; }
+        h2 { font-size: 27px; }
+        h3 { font-size: 19px; }
+        .muted, small { color: var(--muted); }
+        .tiny { font-size: 12px; }
+        .row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+        .between { justify-content: space-between; }
+        .grow { flex: 1; }
+        .panel {
+            background: var(--panel);
+            padding: 24px;
+            border: 1px solid var(--line);
+            border-radius: 14px;
+        }
+        .wrap {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 30px 24px 60px;
+            flex: 1;
+        }
+        .notice {
+            text-align: center;
+            background: #122039;
+            padding: 7px 12px;
+            font-size: 12px;
+            color: #b7c6dc;
+        }
+        header {
+            background: #080f1c;
+            border-bottom: 1px solid var(--line);
+        }
+        nav {
+            max-width: 1200px;
+            margin: auto;
+            padding: 18px 24px;
+            display: flex;
+            align-items: center;
+            gap: 23px;
+            flex-wrap: wrap;
+        }
+        .logo {
+            font-weight: 800;
+            letter-spacing: 1px;
+            font-size: 23px;
+            color: #fff;
+        }
+        .logo b { color: #8695ff; }
+        .links { display: flex; gap: 18px; flex-wrap: wrap; flex: 1; }
+        .links a { color: #bbcae0; }
+        .links a.active { color: #fff; font-weight: 600; }
+        .hero {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            padding: 44px 36px;
+            border: 1px solid #22395a;
+            border-radius: 18px;
+            background: radial-gradient(ellipse at 85% 20%, #34327c, transparent 55%), #0a172b;
+            margin-bottom: 35px;
+        }
+        .hero h1 { margin: 20px 0; }
+        .gradient {
+            background: linear-gradient(100deg, #69bbff, #be94ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .hero-art { display: flex; align-items: center; transform: rotate(-4deg); }
+        .pill {
+            display: inline-block;
+            font-size: 12px;
+            letter-spacing: 1px;
+            background: #12314b;
+            color: #a3d9ff;
+            padding: 5px 10px;
+            border-radius: 15px;
+        }
+        .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+        .card {
+            background: linear-gradient(150deg, #162740, #0b1524);
+            border: 1px solid var(--line);
+            border-radius: 13px;
+            overflow: hidden;
+            transition: .15s;
+            display: flex;
+            flex-direction: column;
+        }
+        .card:hover { transform: translateY(-3px); border-color: #637da6; }
+        .info {
+            padding: 17px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            justify-content: space-between;
+        }
+        .info h3 { margin: 8px 0; }
+        .art {
+            position: relative;
+            height: 165px;
+            width: 100%;
+            overflow: hidden;
+            background: radial-gradient(circle at 70% 20%, var(--c, #5659db), transparent 55%), linear-gradient(140deg, #152e4b, #040916);
+        }
+        .art:before {
+            content: '';
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            border: 1px solid #ffffff66;
+            border-radius: 50%;
+            right: 20%;
+            top: 15%;
+            box-shadow: 0 0 40px var(--c, #5659db);
+        }
+        .art:after {
+            content: '';
+            position: absolute;
+            inset: 30% -5% -5%;
+            background: linear-gradient(120deg, #2a4264, #050b16);
+            clip-path: polygon(0 100%, 0 60%, 20% 25%, 35% 65%, 55% 0, 75% 65%, 88% 20%, 100% 65%, 100% 100%);
+        }
+        .art strong {
+            position: absolute;
+            bottom: 15px;
+            left: 18px;
+            right: 12px;
+            z-index: 2;
+            letter-spacing: 2px;
+            font-size: 20px;
+            color: #edf4ff;
+            text-shadow: 0 2px 8px #000;
+        }
+        .art img { width: 100%; height: 100%; object-fit: cover; position: absolute; z-index: 3; }
+        .large { height: 320px; border-radius: 13px; }
+        .large strong { font-size: 32px; }
+        .section { margin: 32px 0 18px; }
+        .filters {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr auto;
+            gap: 12px;
+            margin: 24px 0;
+        }
+        .split { display: grid; grid-template-columns: 1fr 340px; gap: 25px; }
+        .price { font-size: 19px; font-weight: 600; }
+        .badge {
+            display: inline-block;
+            padding: 4px 9px;
+            background: #173454;
+            color: #b0d8ff;
+            border-radius: 6px;
+            font-size: 12px;
+        }
+        .badge-ok { background: #143b2f; color: #89e9b8; }
+        .badge-lock { background: #411b2a; color: #ffb5bf; }
+        .stars { color: #ffd078; }
+        .success { color: #89e9b8; }
+        .error, .field-error { display: block; color: #ffb5bf; font-size: 13px; margin-top: 4px; }
+        .alert-box {
+            background: #142b47;
+            border: 1px solid #4873a8;
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin-bottom: 18px;
+        }
+        .alert-box.err { background: #381826; border-color: #8c3b55; color: #ffd4db; }
+        .alert-box.ok { background: #12362a; border-color: #2f8564; color: #b7f5d8; }
+        .empty { padding: 40px 15px; text-align: center; color: var(--muted); }
+        .auth { max-width: 480px; margin: 30px auto; }
+        .full { width: 100%; margin-top: 18px; }
+        .pages { display: flex; gap: 8px; justify-content: center; margin: 26px 0; flex-wrap: wrap; }
+        .layout { display: grid; grid-template-columns: 195px 1fr; gap: 24px; }
+        .side { display: flex; flex-direction: column; gap: 7px; }
+        .side a, .side button {
+            text-align: left;
+            background: transparent;
+            border: 0;
+            color: #edf4ff;
+            padding: 10px 14px;
+            border-radius: 9px;
+            display: block;
+        }
+        .side a:hover, .side button:hover { background: #172740; }
+        .side .active { background: #233757; font-weight: 600; }
+        .table { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        th, td { text-align: left; border-bottom: 1px solid var(--line); padding: 13px 10px; }
+        th { color: #a5bad7; font-weight: 500; }
+        td button, td .btn { padding: 6px 11px; margin: 2px; font-size: 13px; }
+        .review { border-top: 1px solid var(--line); padding: 17px 0; margin-top: 15px; }
+        .review p { white-space: pre-wrap; margin-bottom: 0; }
+        .promo { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .promo .panel { background: linear-gradient(120deg, #12314e, #292052); }
+        footer {
+            text-align: center;
+            border-top: 1px solid var(--line);
+            padding: 28px;
+            color: #98acc9;
+            font-size: 13px;
+            margin-top: auto;
+        }
+        #toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #204468;
+            border: 1px solid #6a99c6;
+            padding: 12px 20px;
+            border-radius: 9px;
+            z-index: 30;
+            max-width: 90%;
+            box-shadow: 0 10px 40px #0008;
+        }
+        @media (max-width: 950px) {
+            .grid { grid-template-columns: repeat(3, 1fr); }
+            .split { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 36px; }
+            .filters { grid-template-columns: 1fr 1fr; }
+        }
+        @media (max-width: 650px) {
+            .wrap { padding: 22px 16px; }
+            .hero { grid-template-columns: 1fr; padding: 28px 22px; }
+            .hero-art { display: none; }
+            .grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+            .art { height: 135px; }
+            .art strong { font-size: 16px; }
+            .info { padding: 12px; }
+            .info h3 { font-size: 16px; }
+            .layout { grid-template-columns: 1fr; }
+            .side { flex-direction: row; overflow: auto; }
+            .side a, .side button { white-space: nowrap; }
+            .links { order: 3; flex-basis: 100%; font-size: 13px; }
+            .filters, .promo { grid-template-columns: 1fr; }
+            .panel { padding: 18px; }
+            h1 { font-size: 34px; }
+            .large { height: 250px; }
+        }
+    </style>
+</head>
+
+<body>
+
+<div th:fragment="header(activeTab)">
+    <div class="notice">BẢN THỬ NGHIỆM · Không giao dịch tiền thật · Cơ sở dữ liệu MySQL (java_play)</div>
+    <header>
+        <nav>
+            <a class="logo" th:href="@{/trang-chu}">NOVA<b>◈PLAY</b></a>
+            <div class="links">
+                <a th:href="@{/trang-chu}" th:classappend="${activeTab == 'home'} ? 'active'">Trang chủ</a>
+                <a th:href="@{/cua-hang}" th:classappend="${activeTab == 'store'} ? 'active'">Cửa hàng</a>
+                <a th:if="${currentUser == null or !currentUser.laAdmin()}" th:href="@{/thu-vien}"
+                   th:classappend="${activeTab == 'library'} ? 'active'">Thư viện</a>
+                <a th:if="${currentUser == null or !currentUser.laAdmin()}" th:href="@{/don-hang}"
+                   th:classappend="${activeTab == 'orders'} ? 'active'">Đơn hàng</a>
+                <a th:if="${currentUser != null and currentUser.laAdmin()}" th:href="@{/admin/tai-khoan}"
+                   th:classappend="${activeTab == 'admin'} ? 'active'">Quản trị</a>
+            </div>
+            <a th:if="${currentUser == null or !currentUser.laAdmin()}" th:href="@{/gio-hang}"
+               th:text="'Giỏ hàng (' + (${cartCount != null ? cartCount : 0}) + ')'">Giỏ hàng (0)</a>
+            <th:block th:if="${currentUser != null}">
+                <small th:text="${currentUser.tenHienThi}">Người dùng</small>
+                <a class="btn" th:href="@{/dang-xuat}">Thoát</a>
+            </th:block>
+            <a th:if="${currentUser == null}" th:href="@{/dang-nhap}">Đăng nhập</a>
+        </nav>
+    </header>
+</div>
+
+<article th:fragment="gameCard(g)" class="card">
+    <a th:href="@{/cua-hang/{id}(id=${g.maTroChoi})}">
+        <div class="art" th:style="'--c:' + ${g.mauBia}">
+            <img th:if="${g.hinhAnh != null and !g.hinhAnh.isBlank()}" th:src="@{'/img/' + ${g.hinhAnh}}" th:alt="${g.tieuDe}">
+            <strong th:text="${#strings.toUpperCase(g.tieuDe)}">GAME</strong>
+        </div>
+    </a>
+    <div class="info">
+        <div>
+            <small>
+                <span th:each="tl, st : ${g.danhSachTheLoai}"
+                      th:text="${tl.tenTheLoai + (st.last ? '' : ' · ')}">Thể loại</span>
+            </small>
+            <h3>
+                <a style="color:inherit" th:href="@{/cua-hang/{id}(id=${g.maTroChoi})}" th:text="${g.tieuDe}">Tên Game</a>
+            </h3>
+            <p class="stars tiny">
+                <span th:if="${soDanhGiaMap != null and soDanhGiaMap.get(g.maTroChoi) != null and soDanhGiaMap.get(g.maTroChoi) > 0}"
+                      th:text="'★ ' + ${#numbers.formatDecimal(diemTrungBinhMap.get(g.maTroChoi), 1, 1)} + ' · ' + ${soDanhGiaMap.get(g.maTroChoi)} + ' đánh giá'">★ 5.0</span>
+                <span th:unless="${soDanhGiaMap != null and soDanhGiaMap.get(g.maTroChoi) != null and soDanhGiaMap.get(g.maTroChoi) > 0}">Chưa có đánh giá</span>
+            </p>
+        </div>
+        <div class="row between">
+            <span class="price" th:text="${#numbers.formatDecimal(g.giaBan, 0, 'POINT', 0, 'POINT') + 'đ'}">0đ</span>
+
+            <a th:if="${currentUser != null and currentUser.laAdmin()}"
+               th:href="@{/cua-hang/{id}(id=${g.maTroChoi})}">Xem chi tiết →</a>
+
+            <div class="row" style="gap:6px;" th:if="${currentUser == null or !currentUser.laAdmin()}">
+                <button type="button" disabled th:if="${ownedIds != null and ownedIds.contains(g.maTroChoi)}">Đã sở hữu</button>
+
+                <th:block th:unless="${ownedIds != null and ownedIds.contains(g.maTroChoi)}">
+                    <a class="btn" th:if="${cartIds != null and cartIds.contains(g.maTroChoi)}" th:href="@{/gio-hang}">Trong giỏ</a>
+                    <form th:unless="${cartIds != null and cartIds.contains(g.maTroChoi)}"
+                          th:action="@{/gio-hang/them}" method="post" style="margin:0;">
+                        <input type="hidden" name="maTroChoi" th:value="${g.maTroChoi}">
+                        <button type="submit">+ Giỏ</button>
+                    </form>
+                    <form th:if="${g.dangBan()}" th:action="@{/don-hang/mua-ngay}" method="post" style="margin:0;">
+                        <input type="hidden" name="maTroChoi" th:value="${g.maTroChoi}">
+                        <button type="submit" class="primary">Mua ngay</button>
+                    </form>
+                </th:block>
+            </div>
+        </div>
+    </div>
+</article>
+
+<div th:fragment="footer">
+    <footer>
+        NOVA PLAY · Cửa hàng mua bán game online (Java Spring Boot / MySQL)<br>
+        <a th:href="@{/cua-hang}">Khám phá cửa hàng</a> · Game và ảnh bìa là dữ liệu minh họa
+    </footer>
+
+    <div id="toast" role="status" th:if="${toastMessage != null}" th:text="${toastMessage}"></div>
+    <div id="toast" role="status" style="background:#411b2a;border-color:#8c3b55;" th:if="${toastError != null}" th:text="${toastError}"></div>
+    <div id="toast" role="status" style="background:#411b2a;border-color:#8c3b55;" th:if="${param.accessDenied}">Bạn không có quyền truy cập trang quản trị.</div>
+    <div id="toast" role="status" style="background:#411b2a;border-color:#8c3b55;" th:if="${param.adminNoBuy}">Tài khoản quản trị chỉ dùng để quản lý. Hãy đăng nhập tài khoản khách để mua game.</div>
+    <div id="toast" role="status" th:if="${param.required}">Vui lòng đăng nhập để sử dụng chức năng này.</div>
+
+    <script>
+        setTimeout(() => {
+            document.querySelectorAll('#toast').forEach(el => el.style.display = 'none');
+        }, 4500);
+    </script>
+</div>
+
+</body>
+</html>
