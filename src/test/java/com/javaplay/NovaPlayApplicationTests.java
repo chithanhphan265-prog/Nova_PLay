@@ -52,7 +52,7 @@ class NovaPlayApplicationTests {
                                 .andExpect(redirectedUrl("/dang-nhap?required=true"));
 
                 mockMvc.perform(post("/dang-nhap")
-                                .param("tenDangNhap", "khach20")
+                                .param("tenDangNhap", "hoaian")
                                 .param("matKhau", "123456"))
                                 .andExpect(status().isOk())
                                 .andExpect(model().attributeExists("loiChung"));
