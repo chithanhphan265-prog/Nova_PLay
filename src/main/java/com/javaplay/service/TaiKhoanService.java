@@ -150,6 +150,6 @@ public class TaiKhoanService {
         } else {
             user.setTrangThai("HOAT_DONG");
         }
-        return nguoiDungRepository.save(user);
+        return nguoiDungRepository.saveAndFlush(user);
     }
 }

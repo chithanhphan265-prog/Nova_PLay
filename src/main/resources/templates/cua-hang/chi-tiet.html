@@ -13,7 +13,7 @@
             <div>
                 <div class="art large" th:style="'--c:' + ${game.mauBia}">
                     <img th:if="${game.hinhAnh != null and !game.hinhAnh.isBlank()}"
-                         th:src="@{'/img/' + ${game.hinhAnh}}" th:alt="${game.tieuDe}">
+                         th:src="@{${game.hinhAnh}}" th:alt="${game.tieuDe}">
                     <strong th:text="${#strings.toUpperCase(game.tieuDe)}">GAME</strong>
                 </div>
 
@@ -34,12 +34,6 @@
 
                 <h2 style="margin-top:24px" th:text="${game.tieuDe}">Tên Game</h2>
 
-                <p class="stars">
-                    <span th:if="${soDanhGia > 0}"
-                          th:text="'★ ' + ${#numbers.formatDecimal(diemTrungBinh, 1, 1)} + '/5 · ' + ${soDanhGia} + ' đánh giá'">★ 5.0/5</span>
-                    <span th:unless="${soDanhGia > 0}">Chưa có đánh giá</span>
-                </p>
-
                 <p class="muted">
                     Nhà phát hành: <span th:text="${game.nhaPhatHanh.tenNhaPhatHanh}">Nova Publishing</span><br>
                     Nhà phát triển: <span th:text="${game.tenNhaPhatTrien}">Nova Studio</span><br>
@@ -58,43 +52,23 @@
                 </th:block>
 
                 <th:block th:if="${currentUser == null or !currentUser.laAdmin()}">
-                    <a th:if="${daSoHuu}" class="btn primary full" th:href="@{/thu-vien}">Trong thư viện</a>
+                    <th:block th:if="${game.dangBan()}">
+                        <form th:action="@{/gio-hang/them}" method="post" style="margin:0;">
+                            <input type="hidden" name="maTroChoi" th:value="${game.maTroChoi}">
+                            <button type="submit" class="primary full">Thêm vào giỏ hàng</button>
+                        </form>
 
-                    <th:block th:unless="${daSoHuu}">
-                        <th:block th:if="${game.dangBan()}">
-                            <a th:if="${trongGio}" class="btn full" th:href="@{/gio-hang}">Đã có trong giỏ hàng →</a>
-                            <form th:unless="${trongGio}" th:action="@{/gio-hang/them}" method="post" style="margin:0;">
-                                <input type="hidden" name="maTroChoi" th:value="${game.maTroChoi}">
-                                <button type="submit" class="primary full">Thêm vào giỏ hàng</button>
-                            </form>
-
-                            <form th:action="@{/don-hang/mua-ngay}" method="post" style="margin:0;">
-                                <input type="hidden" name="maTroChoi" th:value="${game.maTroChoi}">
-                                <button type="submit" class="primary full" style="margin-top:10px;">Mua ngay</button>
-                            </form>
-                        </th:block>
-
-                        <button th:unless="${game.dangBan()}" type="button" class="full" disabled>Đã ngừng bán</button>
+                        <form th:action="@{/don-hang/mua-ngay}" method="post" style="margin:0;">
+                            <input type="hidden" name="maTroChoi" th:value="${game.maTroChoi}">
+                            <button type="submit" class="primary full" style="margin-top:10px;">Mua ngay</button>
+                        </form>
                     </th:block>
+
+                    <button th:unless="${game.dangBan()}" type="button" class="full" disabled>Đã ngừng bán</button>
 
                     <p class="tiny muted" style="margin-top:12px;">Mua cho chính tài khoản · Không có hạn sử dụng</p>
                 </th:block>
             </aside>
-        </div>
-
-        <div class="section">
-            <h2>Đánh giá từ người chơi</h2>
-        </div>
-        <div class="panel">
-            <p class="muted" th:if="${danhGias.empty}">Chưa có đánh giá nào cho trò chơi này.</p>
-            <div class="review" th:each="dg : ${danhGias}">
-                <div class="row between">
-                    <strong th:text="${dg.nguoiDung.tenHienThi}">Người chơi</strong>
-                    <span class="stars" th:text="${#strings.repeat('★', dg.soSao)}">★★★★★</span>
-                </div>
-                <small th:text="${#temporals.format(dg.ngayDanhGia, 'dd/MM/yyyy HH:mm')} + ' · Đã sở hữu game'">Ngày đánh giá</small>
-                <p th:text="${dg.noiDung}">Nội dung nhận xét</p>
-            </div>
         </div>
     </main>
 

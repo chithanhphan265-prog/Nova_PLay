@@ -23,7 +23,7 @@
                 <a th:href="@{/cua-hang/{id}(id=${heroGame.maTroChoi})}" style="width:100%;">
                     <div class="art large" th:style="'--c:' + ${heroGame.mauBia}">
                         <img th:if="${heroGame.hinhAnh != null and !heroGame.hinhAnh.isBlank()}"
-                             th:src="@{'/img/' + ${heroGame.hinhAnh}}" th:alt="${heroGame.tieuDe}">
+                             th:src="@{${heroGame.hinhAnh}}" th:alt="${heroGame.tieuDe}">
                         <strong th:text="${#strings.toUpperCase(heroGame.tieuDe)}">ASTRAL ODYSSEY</strong>
                     </div>
                 </a>
@@ -63,7 +63,7 @@
                 <span class="pill">CỘNG ĐỒNG NGƯỜI CHƠI</span>
                 <h2 style="margin-top:18px">Chơi. Cảm nhận.<br>Chia sẻ.</h2>
                 <p class="muted">Đánh giá từ những người đã sở hữu game.</p>
-                <a th:href="@{/cua-hang(sort='danhGia')}">Xem game được đánh giá cao →</a>
+                <a th:href="@{/cua-hang(sort='moi')}">Khám phá game mới nhất →</a>
             </div>
         </div>
 

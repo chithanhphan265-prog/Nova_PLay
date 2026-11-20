@@ -327,7 +327,7 @@
                th:text="'Giỏ hàng (' + (${cartCount != null ? cartCount : 0}) + ')'">Giỏ hàng (0)</a>
             <th:block th:if="${currentUser != null}">
                 <small th:text="${currentUser.tenHienThi}">Người dùng</small>
-                <a class="btn" th:href="@{/dang-xuat}">Thoát</a>
+                <a class="btn" th:href="@{/dang-xuat}">Đăng xuất</a>
             </th:block>
             <a th:if="${currentUser == null}" th:href="@{/dang-nhap}">Đăng nhập</a>
         </nav>
@@ -337,7 +337,7 @@
 <article th:fragment="gameCard(g)" class="card">
     <a th:href="@{/cua-hang/{id}(id=${g.maTroChoi})}">
         <div class="art" th:style="'--c:' + ${g.mauBia}">
-            <img th:if="${g.hinhAnh != null and !g.hinhAnh.isBlank()}" th:src="@{'/img/' + ${g.hinhAnh}}" th:alt="${g.tieuDe}">
+            <img th:if="${g.hinhAnh != null and !g.hinhAnh.isBlank()}" th:src="@{${g.hinhAnh}}" th:alt="${g.tieuDe}">
             <strong th:text="${#strings.toUpperCase(g.tieuDe)}">GAME</strong>
         </div>
     </a>
@@ -350,11 +350,6 @@
             <h3>
                 <a style="color:inherit" th:href="@{/cua-hang/{id}(id=${g.maTroChoi})}" th:text="${g.tieuDe}">Tên Game</a>
             </h3>
-            <p class="stars tiny">
-                <span th:if="${soDanhGiaMap != null and soDanhGiaMap.get(g.maTroChoi) != null and soDanhGiaMap.get(g.maTroChoi) > 0}"
-                      th:text="'★ ' + ${#numbers.formatDecimal(diemTrungBinhMap.get(g.maTroChoi), 1, 1)} + ' · ' + ${soDanhGiaMap.get(g.maTroChoi)} + ' đánh giá'">★ 5.0</span>
-                <span th:unless="${soDanhGiaMap != null and soDanhGiaMap.get(g.maTroChoi) != null and soDanhGiaMap.get(g.maTroChoi) > 0}">Chưa có đánh giá</span>
-            </p>
         </div>
         <div class="row between">
             <span class="price" th:text="${#numbers.formatDecimal(g.giaBan, 0, 'POINT', 0, 'POINT') + 'đ'}">0đ</span>
@@ -363,20 +358,14 @@
                th:href="@{/cua-hang/{id}(id=${g.maTroChoi})}">Xem chi tiết →</a>
 
             <div class="row" style="gap:6px;" th:if="${currentUser == null or !currentUser.laAdmin()}">
-                <button type="button" disabled th:if="${ownedIds != null and ownedIds.contains(g.maTroChoi)}">Đã sở hữu</button>
-
-                <th:block th:unless="${ownedIds != null and ownedIds.contains(g.maTroChoi)}">
-                    <a class="btn" th:if="${cartIds != null and cartIds.contains(g.maTroChoi)}" th:href="@{/gio-hang}">Trong giỏ</a>
-                    <form th:unless="${cartIds != null and cartIds.contains(g.maTroChoi)}"
-                          th:action="@{/gio-hang/them}" method="post" style="margin:0;">
-                        <input type="hidden" name="maTroChoi" th:value="${g.maTroChoi}">
-                        <button type="submit">+ Giỏ</button>
-                    </form>
-                    <form th:if="${g.dangBan()}" th:action="@{/don-hang/mua-ngay}" method="post" style="margin:0;">
-                        <input type="hidden" name="maTroChoi" th:value="${g.maTroChoi}">
-                        <button type="submit" class="primary">Mua ngay</button>
-                    </form>
-                </th:block>
+                <form th:action="@{/gio-hang/them}" method="post" style="margin:0;">
+                    <input type="hidden" name="maTroChoi" th:value="${g.maTroChoi}">
+                    <button type="submit">+ Giỏ</button>
+                </form>
+                <form th:if="${g.dangBan()}" th:action="@{/don-hang/mua-ngay}" method="post" style="margin:0;">
+                    <input type="hidden" name="maTroChoi" th:value="${g.maTroChoi}">
+                    <button type="submit" class="primary">Mua ngay</button>
+                </form>
             </div>
         </div>
     </div>

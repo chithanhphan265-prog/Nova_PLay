@@ -1,7 +1,6 @@
 package com.javaplay.config;
 
 import com.javaplay.entity.NguoiDung;
-import com.javaplay.repository.GioHangRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.ui.Model;
@@ -13,12 +12,6 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 @ControllerAdvice
 public class GlobalModelAdvice {
 
-    private final GioHangRepository gioHangRepository;
-
-    public GlobalModelAdvice(GioHangRepository gioHangRepository) {
-        this.gioHangRepository = gioHangRepository;
-    }
-
     @ModelAttribute("currentUser")
     public NguoiDung layNguoiDungHienTai(HttpSession session) {
         if (session == null) {
@@ -28,19 +21,8 @@ public class GlobalModelAdvice {
     }
 
     @ModelAttribute("cartCount")
-    public long laySoLuongGioHang(HttpSession session) {
-        if (session == null) {
-            return 0L;
-        }
-        NguoiDung user = (NguoiDung) session.getAttribute("currentUser");
-        if (user == null || user.laAdmin()) {
-            return 0L;
-        }
-        try {
-            return gioHangRepository.countByNguoiDung_MaNguoiDung(user.getMaNguoiDung());
-        } catch (Exception ex) {
-            return 0L;
-        }
+    public long laySoLuongGioHang() {
+        return 0L;
     }
 
     @ExceptionHandler(NoResourceFoundException.class)
